@@ -6,8 +6,11 @@ function projectList() {
   const getListOfProjects = () => listOfProjects;
 
   // used for testing
-  const getProjectNames = () => {
-    listOfProjects.forEach(project => console.log(project.getProjectName()));
+  const getProjectAttributes = () => {
+    listOfProjects.forEach(project => {
+      console.log(project.getProjectName());
+      console.log(project.getProjectState());
+    });
   };
 
   const createNewProject = (name, state, projectOptions) => {
@@ -21,13 +24,14 @@ function projectList() {
     if (index !== -1) listOfProjects.splice(index, 1);
   }
 
-  const setProjectState = (newState) => {
-
+  const setProjectState = (newState, id) => {
+    const project = listOfProjects.filter(element => element.getProjectID() === id);
+    project[0].changeProjectState(newState);
   }
 
   return {
     getListOfProjects,
-    getProjectNames,
+    getProjectAttributes,
     createNewProject,
     deleteProject,
     setProjectState,
@@ -40,10 +44,11 @@ function projectList() {
 const projects = projectList();
 projects.createNewProject("The Odin Project", "in Progress", {projectDescription: "Learn Web Development", projectCategory: "Coding"});
 projects.createNewProject("Learn Blender", "halted", {projectCategory: "3D Art"});
-projects.getProjectNames();
-const projectID = projects.getListOfProjects()[0].getProjectID();
-projects.deleteProject(projectID);
-projects.getProjectNames();
+projects.getProjectAttributes();
+const projectID = projects.getListOfProjects()[1].getProjectID();
+projects.setProjectState("in progress", projectID);
+// projects.deleteProject(projectID);
+projects.getProjectAttributes();
 // const testProject = projects.getListOfProjects()[0];
 // const testProject2 = projects.getListOfProjects()[1];
 // testProject.createTodoItem("Learn Javascript", {priority: "high"});
