@@ -81,6 +81,10 @@ function Project(projectName, projectState, projectOptions) {
     if (index !== -1) listOfItems.splice(index, 1);
   }
 
+  const changeProjectState = (newState) => {
+    projectState = newState;
+  }
+
   // used for testing
   const printTodos = () => {
     listOfItems.forEach((item) => {
@@ -102,6 +106,7 @@ function Project(projectName, projectState, projectOptions) {
     getProjectID,
     createTodoItem,
     deleteTodoItem,
+    changeProjectState,
     printTodos,
   };
 }
