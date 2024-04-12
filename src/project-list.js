@@ -24,17 +24,11 @@ function projectList() {
     if (index !== -1) listOfProjects.splice(index, 1);
   }
 
-  const setProjectState = (newState, id) => {
-    const project = listOfProjects.filter(element => element.getProjectID() === id);
-    project[0].changeProjectState(newState);
-  }
-
   return {
     getListOfProjects,
     getProjectAttributes,
     createNewProject,
     deleteProject,
-    setProjectState,
   };
 }
 
@@ -45,9 +39,11 @@ const projects = projectList();
 projects.createNewProject("The Odin Project", "in Progress", {projectDescription: "Learn Web Development", projectCategory: "Coding"});
 projects.createNewProject("Learn Blender", "halted", {projectCategory: "3D Art"});
 projects.getProjectAttributes();
-const projectID = projects.getListOfProjects()[1].getProjectID();
-projects.setProjectState("in progress", projectID);
+// const projectID = projects.getListOfProjects()[1].getProjectID();
+projects.getListOfProjects()[1].changeProjectName("Learn Japanese");
 // projects.deleteProject(projectID);
+projects.getProjectAttributes();
+projects.getListOfProjects()[1].changeProjectState("finished");
 projects.getProjectAttributes();
 // const testProject = projects.getListOfProjects()[0];
 // const testProject2 = projects.getListOfProjects()[1];
