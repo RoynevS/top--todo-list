@@ -5,7 +5,7 @@ function todoItem(title, projectID, project, optionObject) {
     priority,
   } = optionObject;
 
-  let done = false;
+  let statusDone = false;
 
   const id = projectID + createID();
 
@@ -37,7 +37,7 @@ function todoItem(title, projectID, project, optionObject) {
   };
 
   const changeStatus = () => {
-    done = true;
+    statusDone = true;
   }
 
   return {
@@ -98,6 +98,10 @@ function Project(projectName, projectState, projectOptions) {
     return listOfItems[1].getID();
   };
 
+  const changeProjectName = (newProjectName) => {
+    projectName = newProjectName;
+  }
+
   return {
     getProjectName,
     getProjectState,
@@ -107,6 +111,7 @@ function Project(projectName, projectState, projectOptions) {
     createTodoItem,
     deleteTodoItem,
     changeProjectState,
+    changeProjectName,
     printTodos,
   };
 }
