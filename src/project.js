@@ -60,7 +60,7 @@ function todoItem(title, projectID, project, optionObject) {
 function Project(projectName, projectState, projectOptions) {
   let { projectDescription, projectCategory } = projectOptions;
   const listOfItems = [];
-  const projectID = createID(); 
+  const projectID = createID();
 
   const getProjectName = () => projectName;
   const getProjectState = () => projectState;
@@ -103,6 +103,12 @@ function Project(projectName, projectState, projectOptions) {
   }
 
   return {
+    projectName,
+    projectState,
+    projectDescription,
+    projectCategory,
+    projectID,
+    listOfItems,
     getProjectName,
     getProjectState,
     getProjectDescription,
