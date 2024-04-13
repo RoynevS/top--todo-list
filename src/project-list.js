@@ -32,19 +32,21 @@ function projectList() {
   };
 }
 
+export { projectList };
 
 
 
-const projects = projectList();
-projects.createNewProject("The Odin Project", "in Progress", {projectDescription: "Learn Web Development", projectCategory: "Coding"});
-projects.createNewProject("Learn Blender", "halted", {projectCategory: "3D Art"});
-projects.getProjectAttributes();
+
+// const projects = projectList();
+// projects.createNewProject("The Odin Project", "in Progress", {projectDescription: "Learn Web Development", projectCategory: "Coding"});
+// projects.createNewProject("Learn Blender", "halted", {projectCategory: "3D Art"});
+// projects.getProjectAttributes();
 // const projectID = projects.getListOfProjects()[1].getProjectID();
-projects.getListOfProjects()[1].changeProjectName("Learn Japanese");
+// projects.getListOfProjects()[1].changeProjectName("Learn Japanese");
 // projects.deleteProject(projectID);
-projects.getProjectAttributes();
-projects.getListOfProjects()[1].changeProjectState("finished");
-projects.getProjectAttributes();
+// projects.getProjectAttributes();
+// projects.getListOfProjects()[1].changeProjectState("finished");
+// projects.getProjectAttributes();
 // const testProject = projects.getListOfProjects()[0];
 // const testProject2 = projects.getListOfProjects()[1];
 // testProject.createTodoItem("Learn Javascript", {priority: "high"});
