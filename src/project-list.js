@@ -1,7 +1,9 @@
 import { Project } from "./project";
+import { dataStorage } from "./data-storage";
 
 function projectList() {
-  const listOfProjects = [];
+  // const listOfProjects = [];
+  const listOfProjects = dataStorage().getData();
 
   const getListOfProjects = () => listOfProjects;
 
