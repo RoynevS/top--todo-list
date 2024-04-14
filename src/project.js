@@ -57,10 +57,9 @@ function todoItem(title, projectID, project, optionObject) {
 }
 
 
-function Project(projectName, projectState, projectOptions) {
+function Project({ projectName, projectState, projectID, projectOptions }) {
   let { projectDescription, projectCategory } = projectOptions;
   const listOfItems = [];
-  const projectID = createID();
 
   const getProjectName = () => projectName;
   const getProjectState = () => projectState;
@@ -85,29 +84,12 @@ function Project(projectName, projectState, projectOptions) {
     projectState = newState;
   }
 
-  // used for testing
-  const printTodos = () => {
-    listOfItems.forEach((item) => {
-      console.log(item.getTitle());
-      // console.log(item.getID());
-      // console.log(item.getDescription());
-      // console.log(item.getDueDate());
-      // console.log(item.getPriority());
-      // console.log(item.getProject());
-    });
-    return listOfItems[1].getID();
-  };
 
   const changeProjectName = (newProjectName) => {
     projectName = newProjectName;
   }
 
   return {
-    projectName,
-    projectState,
-    projectDescription,
-    projectCategory,
-    projectID,
     listOfItems,
     getProjectName,
     getProjectState,
@@ -118,7 +100,6 @@ function Project(projectName, projectState, projectOptions) {
     deleteTodoItem,
     changeProjectState,
     changeProjectName,
-    printTodos,
   };
 }
 
@@ -131,4 +112,4 @@ function createID() {
   return id;
 }
 
-export { Project };
+export { Project, createID };
