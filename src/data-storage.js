@@ -1,6 +1,6 @@
 function dataStorage() {
-  const postData = (project, index) => {
-    localStorageData().itemSetter(project, index);
+  const postData = (projectList) => {
+    localStorageData().itemSetter(projectList);
   };
 
   const getData = () => localStorageData().itemGetter();
@@ -17,20 +17,12 @@ function dataStorage() {
 
 
 function localStorageData() {
-  const itemSetter = (itemToStore, index) => {
-    const stringItem = JSON.stringify(itemToStore);
-    localStorage.setItem(`project${index}`,stringItem);
+  const itemSetter = (projectList) => {
+    const stringItem = JSON.stringify(projectList);
+    localStorage.setItem(`projects`, stringItem);
   }
 
-  const itemGetter = () => {
-    const projectArray = Object.entries(localStorage);
-    const itemArray = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const project = JSON.parse(projectArray[i][1]);
-      itemArray.push(project);
-    }
-    return itemArray;
-  };
+  const itemGetter = () => JSON.parse(localStorage.getItem("projects"));
 
   const getLength = () => localStorage.length;
 
