@@ -7,7 +7,8 @@ function screenController() {
   const projects = projectList()
 
   const addProjectButton = document.querySelector(".add-project-btn");
-  const addTodoButton = document.querySelector(".add-todo-btn");
+  const projectSectionDOM = document.querySelector(".project-section");
+
 
   const randomNumber = () => {
     return Math.floor(Math.random() * 20);
@@ -17,6 +18,7 @@ function screenController() {
     const newProject = {
       projectName: `The Odin Project${randomNumber()}`,
       projectState: "in Progress",
+      listOfTodos: [],
       projectID: createID(),
       projectOptions: {
         projectDescription: "Learn Web Development", 
@@ -24,9 +26,7 @@ function screenController() {
       },
     };
 
-    projects.getSavedProjects().push(newProject);
-
-    dataStorage().postData(projects.getSavedProjects());
+    projects.saveNewProjectData(newProject);
 
     updateNavbar();
   };
@@ -45,17 +45,15 @@ function screenController() {
   };
 
   const fillNavbarWithProjects = () => {
-    const projectSectionDOM = document.querySelector(".project-section");
     const projectsListDOM = document.createElement("ul");
 
-    projects.listOfProjects().forEach(project => {
+    const listOfProjects = projects.createListOfProjects();
+
+    listOfProjects.forEach(project => {
       const todoBtn = document.createElement("button");
       todoBtn.classList.add("add-todo-btn");
       todoBtn.textContent = "+ Todo";
-      todoBtn.dataset.id = project.getProjectID()
-      todoBtn.addEventListener("click", event => {
-        project.createTodoItem("This is just a tribute", {});
-      });
+      todoBtn.dataset.id = project.getProjectID();
       const listItem = document.createElement("li");
       listItem.textContent = project.getProjectName();
       listItem.appendChild(todoBtn);
@@ -64,6 +62,27 @@ function screenController() {
     projectSectionDOM.appendChild(projectsListDOM);
   };
 
+  const addTodoItem = event => {
+    if (event.target.classList.contains("add-todo-btn")) {
+      const [ selectedProject ] = projects.getSavedProjects()
+        .filter(element => element.projectID === event.target.dataset.id);
+      console.log(selectedProject);
+      selectedProject.listOfTodos.push(
+        {
+          title: "Learn JavaScript",
+          id: selectedProject.projectID + createID(),
+          project: selectedProject.projectName,
+          options: {
+            description: "build javascript projects",
+            dueDate: new Date(),
+            priority: "high",
+          },
+        }
+      );
+      dataStorage().postData(projects.getSavedProjects());
+    }
+  }
+
   const siteLoad = () => {
     if (dataStorage().getDataLength() === 0) return;
     fillNavbarWithProjects();
@@ -71,8 +90,8 @@ function screenController() {
 
   siteLoad();
 
+  projectSectionDOM.addEventListener("click", addTodoItem);
   addProjectButton.addEventListener("click", addProject);
-  // addTodoButton.addEventListener("click", addTodoButton);
 }
 
 screenController();
