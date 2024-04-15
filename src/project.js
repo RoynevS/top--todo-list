@@ -1,4 +1,4 @@
-function todoItem(title, projectID, project, optionObject) {
+function todoItem({ title, projectID, project, optionObject }) {
   let {
     description,
     dueDate,
@@ -57,27 +57,22 @@ function todoItem(title, projectID, project, optionObject) {
 }
 
 
-function Project({ projectName, projectState, projectID, projectOptions }) {
+function Project({ projectName, projectState, listOfTodos, projectID, projectOptions }) {
   let { projectDescription, projectCategory } = projectOptions;
-  const listOfItems = [];
 
   const getProjectName = () => projectName;
   const getProjectState = () => projectState;
   const getProjectDescription = () => projectDescription;
   const getProjectCategory = () => projectCategory;
   const getProjectID = () => projectID;
+  const getListOfTodos = () => listOfTodos;
 
-
-  const createTodoItem = (title, optionObject) => {
-    const newTodo = todoItem(title, projectID, projectName, optionObject);
-    listOfItems.push(newTodo);
-  };
-
-
+  listOfTodos = listOfTodos.map(todo => todoItem(todo));
+  
   const deleteTodoItem = (id) => {
-    const item = listOfItems.filter(element => element.getID() === id);
-    const index = listOfItems.indexOf(item[0]);
-    if (index !== -1) listOfItems.splice(index, 1);
+    const item = listOfTodos.filter(element => element.getID() === id);
+    const index = listOfTodos.indexOf(item[0]);
+    if (index !== -1) listOfTodos.splice(index, 1);
   }
 
   const changeProjectState = (newState) => {
@@ -90,13 +85,12 @@ function Project({ projectName, projectState, projectID, projectOptions }) {
   }
 
   return {
-    listOfItems,
     getProjectName,
     getProjectState,
     getProjectDescription,
     getProjectCategory,
     getProjectID,
-    createTodoItem,
+    getListOfTodos,
     deleteTodoItem,
     changeProjectState,
     changeProjectName,
