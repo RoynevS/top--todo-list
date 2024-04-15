@@ -172,17 +172,36 @@ button {
   box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
 }
 
+.delete-project-btn,
 .edit-project-btn {
   border: none;
   background-color: var(--clr-neutral-300);
   padding: 0.3rem;
 }
 
+.delete-project-btn:hover,
 .edit-project-btn:hover {
   background-color: var(--clr-main-200);
   border-radius: 6px;
 }
 
+.delete-project-btn > img,
 .edit-project-btn > img {
   width: 2rem;
+}
+
+.todo-edit-btn,
+.todo-delete-btn {
+  border: none;
+  background-color: var(--clr-neutral-100);
+}
+
+.todo-edit-btn:hover,
+.todo-delete-btn:hover {
+  background-color: var(--clr-neutral-300);
+}
+
+.todo-edit-btn > img,
+.todo-delete-btn > img {
+  width: 1.2rem;
 }
