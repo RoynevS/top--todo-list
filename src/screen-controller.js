@@ -1,6 +1,8 @@
 import { projectList } from "./project-list";
 import { createID } from "./project";
 import { dataStorage } from "./data-storage";
+import { format } from "date-fns";
+import editImage from "./images/square-edit-outline.png";
 
 
 function screenController() {
@@ -76,7 +78,7 @@ function screenController() {
           project: selectedProject.projectName,
           optionObject: {
             description: "build javascript projects",
-            dueDate: new Date(),
+            dueDate: "2024-04-15",
             priority: "high",
           },
         }
@@ -104,28 +106,38 @@ function screenController() {
         return;
       default:
         fillMainWithDescription(selectedProject, contentDiv);
-        fillMainWithTodoList(selectedProject, contentDiv);     
+        fillMainWithTodoList(selectedProject, contentDiv);
     };
   };
 
 
   const fillMainWithDescription = (selectedProject, contentDiv) => {
     const mainHeader = document.createElement("div");
+    const headingDiv = document.createElement("div");
     const projectHeading = document.createElement("h2");
-    
     const descriptionPara = document.createElement("p");
+    const editProjectBtn = document.createElement("button");
+
+    const newEditImage = new Image();
 
     mainHeader.classList.add("main-header");
+    headingDiv.classList.add("heading-section");
+    editProjectBtn.classList.add("edit-project-btn");
     descriptionPara.classList.add("description-text");
-
-    projectHeading.textContent = selectedProject.getProjectName();
     projectHeading.classList.add("project-heading-main");
+
+    newEditImage.src = editImage;
+    
+    projectHeading.textContent = selectedProject.getProjectName();
     
     if (selectedProject.getProjectDescription()) {
       descriptionPara.textContent = selectedProject.getProjectDescription();
     }
-
-    mainHeader.appendChild(projectHeading);
+    
+    editProjectBtn.appendChild(newEditImage);
+    headingDiv.appendChild(projectHeading);
+    headingDiv.appendChild(editProjectBtn);
+    mainHeader.appendChild(headingDiv);
     mainHeader.appendChild(descriptionPara);
     contentDiv.appendChild(mainHeader);
   };
@@ -142,13 +154,20 @@ function screenController() {
       const todoDescriptionText = document.createElement("p");
       const todoPriorityText = document.createElement("p");
       const todoDueDateText = document.createElement("p");
+      const checkbox = document.createElement("input");
 
+      checkbox.type = "checkbox";
       todoTitleText.textContent = todo.getTitle();
       todoDescriptionText.textContent = todo.getDescription();
       todoPriorityText.textContent = todo.getPriority();
-      todoDueDateText.textContent = todo.getDueDate();
+      todoDueDateText.textContent = format(
+                                      new Date(todo.getDueDate()),
+                                      "EEEE',' dd MMMM"
+                                    );
+
       todoItem.classList.add("todo-item");
 
+      todoItem.appendChild(checkbox);
       todoItem.appendChild(todoTitleText);
       todoItem.appendChild(todoDescriptionText);
       todoItem.appendChild(todoPriorityText);
