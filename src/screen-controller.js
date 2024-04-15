@@ -9,6 +9,7 @@ function screenController() {
   const addProjectButton = document.querySelector(".add-project-btn");
   const projectSectionDOM = document.querySelector(".project-section");
   const main = document.querySelector("main");
+  const aside = document.querySelector("aside");
 
 
   const randomNumber = () => {
@@ -51,17 +52,12 @@ function screenController() {
     const listOfProjects = projects.createListOfProjects();
 
     listOfProjects.forEach(project => {
-      // const todoBtn = document.createElement("button");
-      // todoBtn.classList.add("add-todo-btn");
-      // todoBtn.textContent = "+ Todo";
-      // todoBtn.dataset.id = project.getProjectID();
       const listItem = document.createElement("li");
       const projectBtn = document.createElement("button");
       projectBtn.textContent = project.getProjectName();
       projectBtn.classList.add("project-btn");
       projectBtn.dataset.id = project.getProjectID();
       projectBtn.dataset.projectName = project.getProjectName();
-      // listItem.appendChild(todoBtn);
       listItem.appendChild(projectBtn);
       projectsListDOM.appendChild(listItem);
     });
@@ -78,7 +74,7 @@ function screenController() {
           title: "Learn JavaScript",
           id: selectedProject.projectID + createID(),
           project: selectedProject.projectName,
-          options: {
+          optionObject: {
             description: "build javascript projects",
             dueDate: new Date(),
             priority: "high",
@@ -86,6 +82,8 @@ function screenController() {
         }
       );
       dataStorage().postData(projects.getSavedProjects());
+      clearMain();
+      fillMain(selectedProject.projectID);
     }
   }
 
@@ -95,8 +93,19 @@ function screenController() {
     const [ selectedProject ] = projects.createListOfProjects()
       .filter(element => element.getProjectID() === projectClicked);
     main.appendChild(contentDiv);
-    fillMainWithDescription(selectedProject, contentDiv);
-    fillMainWithTodoList(selectedProject, contentDiv);
+    switch (projectClicked) {
+      case "1":
+        return;
+      case "2":
+        return;
+      case "3":
+        return;
+      case undefined:
+        return;
+      default:
+        fillMainWithDescription(selectedProject, contentDiv);
+        fillMainWithTodoList(selectedProject, contentDiv);     
+    };
   };
 
 
@@ -125,12 +134,34 @@ function screenController() {
   const fillMainWithTodoList = (selectedProject, contentDiv) => {
     const mainContent = document.createElement("div")
     const addTodoBtn = document.createElement("button");
+    const todoList = document.createElement("ul");
+
+    selectedProject.getListOfTodos().forEach(todo => {
+      const todoItem = document.createElement("li");
+      const todoTitleText = document.createElement("h3");
+      const todoDescriptionText = document.createElement("p");
+      const todoPriorityText = document.createElement("p");
+      const todoDueDateText = document.createElement("p");
+
+      todoTitleText.textContent = todo.getTitle();
+      todoDescriptionText.textContent = todo.getDescription();
+      todoPriorityText.textContent = todo.getPriority();
+      todoDueDateText.textContent = todo.getDueDate();
+      todoItem.classList.add("todo-item");
+
+      todoItem.appendChild(todoTitleText);
+      todoItem.appendChild(todoDescriptionText);
+      todoItem.appendChild(todoPriorityText);
+      todoItem.appendChild(todoDueDateText);
+      todoList.appendChild(todoItem);
+    });
 
     mainContent.classList.add("main-content-section");
     addTodoBtn.classList.add("add-todo-btn");
     addTodoBtn.textContent = "+ Todo";
     addTodoBtn.dataset.id = selectedProject.getProjectID();
 
+    mainContent.appendChild(todoList);
     mainContent.appendChild(addTodoBtn);
     contentDiv.appendChild(mainContent);
   };
@@ -144,8 +175,8 @@ function screenController() {
   };
 
 
-  const projectBtnClickHandler = event => {
-    if (event.target.classList.contains("project-btn")) {
+  const asideBtnClickHandler = event => {
+    if (event.target.classList.contains("project-btn") || event.target.classList.contains("nav-btn")) {
       dataStorage().postData(event.target.dataset.id);
       clearMain();
       fillMain(event.target.dataset.id);
@@ -155,14 +186,27 @@ function screenController() {
   const siteLoad = () => {
     if (dataStorage().getDataLength() === 0) return;
     fillNavbarWithProjects();
-    if (dataStorage().getActiveTab()) fillMain(dataStorage().getActiveTab());
+
+    switch (dataStorage().getActiveTab()) {
+      case "1":
+        return;
+      case "2":
+        return;
+      case "3":
+        return;
+      case undefined:
+        return;
+      default:
+        fillMain(dataStorage().getActiveTab());
+    };
   };
 
-  siteLoad();
 
-  projectSectionDOM.addEventListener("click", projectBtnClickHandler);
+  aside.addEventListener("click", asideBtnClickHandler);
   main.addEventListener("click", addTodoItem);
   addProjectButton.addEventListener("click", addProject);
+
+  siteLoad();
 }
 
 export { screenController };
