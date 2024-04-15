@@ -3,6 +3,7 @@ import { createID } from "./project";
 import { dataStorage } from "./data-storage";
 import { format } from "date-fns";
 import editImage from "./images/square-edit-outline.png";
+import deleteImage from "./images/delete.png";
 
 
 function screenController() {
@@ -117,26 +118,32 @@ function screenController() {
     const projectHeading = document.createElement("h2");
     const descriptionPara = document.createElement("p");
     const editProjectBtn = document.createElement("button");
+    const deleteProjectBtn = document.createElement("button");
 
     const newEditImage = new Image();
+    newEditImage.src = editImage;
+    const newDeleteImage = new Image();
+    newDeleteImage.src = deleteImage;
 
     mainHeader.classList.add("main-header");
     headingDiv.classList.add("heading-section");
     editProjectBtn.classList.add("edit-project-btn");
+    deleteProjectBtn.classList.add("delete-project-btn");
     descriptionPara.classList.add("description-text");
     projectHeading.classList.add("project-heading-main");
 
-    newEditImage.src = editImage;
+    
     
     projectHeading.textContent = selectedProject.getProjectName();
     
     if (selectedProject.getProjectDescription()) {
       descriptionPara.textContent = selectedProject.getProjectDescription();
     }
-    
+    deleteProjectBtn.appendChild(newDeleteImage);
     editProjectBtn.appendChild(newEditImage);
     headingDiv.appendChild(projectHeading);
     headingDiv.appendChild(editProjectBtn);
+    headingDiv.appendChild(deleteProjectBtn);
     mainHeader.appendChild(headingDiv);
     mainHeader.appendChild(descriptionPara);
     contentDiv.appendChild(mainHeader);
@@ -155,6 +162,15 @@ function screenController() {
       const todoPriorityText = document.createElement("p");
       const todoDueDateText = document.createElement("p");
       const checkbox = document.createElement("input");
+      const editBtn = document.createElement("button");
+      const deleteBtn = document.createElement("button");
+      const btnContainer = document.createElement("div");
+      
+      const newEditImage = new Image();
+      newEditImage.src = editImage;
+
+      const newDeleteImage = new Image();
+      newDeleteImage.src = deleteImage;
 
       checkbox.type = "checkbox";
       todoTitleText.textContent = todo.getTitle();
@@ -166,12 +182,20 @@ function screenController() {
                                     );
 
       todoItem.classList.add("todo-item");
+      editBtn.classList.add("todo-edit-btn");
+      deleteBtn.classList.add("todo-delete-btn");
+      btnContainer.classList.add("btn-container");
 
+      editBtn.appendChild(newEditImage);
+      deleteBtn.appendChild(newDeleteImage);
+      btnContainer.appendChild(editBtn);
+      btnContainer.appendChild(deleteBtn);
       todoItem.appendChild(checkbox);
       todoItem.appendChild(todoTitleText);
       todoItem.appendChild(todoDescriptionText);
       todoItem.appendChild(todoPriorityText);
       todoItem.appendChild(todoDueDateText);
+      todoItem.appendChild(btnContainer);
       todoList.appendChild(todoItem);
     });
 
