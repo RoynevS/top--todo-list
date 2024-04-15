@@ -1,9 +1,10 @@
 function dataStorage() {
-  const postData = (projectList) => {
-    localStorageData().itemSetter(projectList);
+  const postData = (data) => {
+    localStorageData().itemSetter(data);
   };
 
   const getData = () => localStorageData().itemGetter();
+  const getActiveTab = () => localStorageData().activeTabGetter();
 
   const getDataLength = () => localStorageData().getLength();
 
@@ -11,24 +12,32 @@ function dataStorage() {
   return {
     postData,
     getData,
+    getActiveTab,
     getDataLength,
   };
 }
 
 
 function localStorageData() {
-  const itemSetter = (projectList) => {
-    const stringItem = JSON.stringify(projectList);
+  const itemSetter = (data) => {
+    if (typeof data === "string") {
+      const stringItem = JSON.stringify(data);
+      localStorage.setItem("activeTab", stringItem);
+      return;
+    }
+    const stringItem = JSON.stringify(data);
     localStorage.setItem(`projects`, stringItem);
   };
 
   const itemGetter = () => JSON.parse(localStorage.getItem("projects"));
+  const activeTabGetter = () => JSON.parse(localStorage.getItem("activeTab"));
 
   const getLength = () => localStorage.length;
 
   return {
     itemSetter,
     itemGetter,
+    activeTabGetter,
     getLength,
   };
 }
