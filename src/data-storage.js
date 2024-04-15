@@ -20,7 +20,7 @@ function localStorageData() {
   const itemSetter = (projectList) => {
     const stringItem = JSON.stringify(projectList);
     localStorage.setItem(`projects`, stringItem);
-  }
+  };
 
   const itemGetter = () => JSON.parse(localStorage.getItem("projects"));
 
