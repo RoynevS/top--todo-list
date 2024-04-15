@@ -13,7 +13,12 @@ function projectList() {
   const getSavedProjects = () => savedProjects;
 
 
-  const listOfProjects = () => {
+  const saveNewProjectData = (newProject) => {
+    getSavedProjects().push(newProject);
+    dataStorage().postData(getSavedProjects());
+  };
+
+  const createListOfProjects = () => {
     if (getSavedProjects().length === 0) return [];
     return getSavedProjects().map(project => Project(project));
   };
@@ -26,7 +31,8 @@ function projectList() {
 
   return {
     getSavedProjects,
-    listOfProjects,
+    saveNewProjectData,
+    createListOfProjects,
     deleteProject,
   };
 }
