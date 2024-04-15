@@ -127,6 +127,12 @@ button {
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
 }
 
+.heading-section {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
 .project-heading-main {
   font-size: var(--fs-800);
   font-weight: var(--fw-bold);
@@ -164,4 +170,19 @@ button {
   padding: 1rem;
   border-radius: 9px;
   box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+}
+
+.edit-project-btn {
+  border: none;
+  background-color: var(--clr-neutral-300);
+  padding: 0.3rem;
+}
+
+.edit-project-btn:hover {
+  background-color: var(--clr-main-200);
+  border-radius: 6px;
+}
+
+.edit-project-btn > img {
+  width: 2rem;
 }
