@@ -34,5 +34,94 @@
 
     <main>
     </main>
+
+    <dialog class="project-modal">
+      <form method="dialog">
+        <h2>Add Project</h2>
+        <section>
+          <h3>Required Information</h3>
+          <p>
+            <label for="project-name">Project name</label>
+            <input type="text" name="project-name" id="project-name" value="The Odin Project" required>
+          </p>
+          <p>
+            <label for="project-state">Project state</label>
+            <select name="project-state" id="project-state" required>
+              <!-- change back first to selected after testing -->
+              <option value="" disabled>(Select one)</option>
+              <option value="Planning" selected>Planning</option>
+              <option value="Not started">Not started</option>
+              <option value="Aborted">Aborted</option>
+              <option value="In progress">In progress</option>
+              <option value="On hold">On Hold</option>
+              <option value="Finished">Finished</option>
+            </select>
+          </p>
+        </section>
+        <section>
+          <h3>Optional</h3>
+          <p>
+            <label for="project-description">Description</label>
+            <input 
+              type="text" 
+              name="project-description" 
+              id="project-description"
+            >
+          </p>
+          <p>
+            <label for="project-category">Category</label>
+            <input type="text" name="project-category" id="project-category">
+          </p>
+        </section>
+        <section>
+          <button class="modal-btn-add-project">Add</button>
+          <button class="modal-btn-close">Close</button>
+        </section>
+      </form>
+    </dialog>
+    
+    <dialog class="task-modal">
+      <form method="dialog">
+        <h2>Add Task</h2>
+        <section>
+          <h3>Required Information</h3>
+          <p>
+            <label for="task-name">Task name</label>
+            <input type="text" name="task-name" id="task-name" required value="Learn Javascript">
+          </p>
+          <p>
+            <label for="task-project">Project to add to</label>
+            <select name="task-project" id="task-project" required>
+
+            </select>
+          </p>
+        </section>
+        <section>
+          <h3>Optional Information</h3>
+          <p>
+            <label for="task-description">Description</label>
+            <input type="text" name="task-description" id="task-description">
+          </p>
+          <p>
+            <label for="task-priority">Priority</label>
+            <select name="task-priority" id="task-priority">
+              <option value="" disabled selected>(Select one)</option>
+              <option value="None">None</option>
+              <option value="Low">Low</option>
+              <option value="Mid">Mid</option>
+              <option value="High">High</option>
+            </select>
+          </p>
+          <p>
+            <label for="due-date">Due Date</label>
+            <input type="date" name="due-date" id="due-date">
+          </p>
+        </section>
+        <section>
+          <button class="modal-btn-add-task">Add Task</button>
+          <button class="modal-btn-close-task">Close</button>
+        </section>
+      </form>
+    </dialog>
   </body>
 </html>
