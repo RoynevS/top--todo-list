@@ -20,6 +20,14 @@ function screenController() {
   const projectStateInput = document.querySelector("#project-state");
   const projectDescriptionInput = document.querySelector("#project-description");
   const projectCategoryInput = document.querySelector("#project-category");
+  const taskModal = document.querySelector(".task-modal");
+  const taskNameInput = document.querySelector("#task-name");
+  const taskProjectInput = document.querySelector("#task-project");
+  const taskDescriptionInput = document.querySelector("#task-description");
+  const taskPriorityInput = document.querySelector("#task-priority");
+  const taskDueDateInput = document.querySelector("#due-date");
+  const taskCloseModalBtn = document.querySelector(".modal-btn-close-task");
+  const modalAddTaskBtn = document.querySelector(".modal-btn-add-task");
 
 
   const addProject = (projectNameInputValue, projectStateInputValue, projectDescriptionInputValue, projectCategoryInputValue) => {
@@ -70,27 +78,26 @@ function screenController() {
     projectSectionDOM.appendChild(projectsListDOM);
   };
 
-  const addTodoItem = event => {
-    if (event.target.classList.contains("add-todo-btn")) {
-      const [ selectedProject ] = projects.getSavedProjects()
-        .filter(element => element.projectID === event.target.dataset.id);
+  const addTodoItem = (taskNameInputValue, taskProjectInputValue, taskDescriptionInputValue, taskPriorityInputValue, taskDueDateInputValue) => {
+    // TODO: Change to given name from id
+    const [ selectedProject ] = projects.getSavedProjects()
+      .filter(element => element.projectID === taskProjectInputValue);
 
-      selectedProject.listOfTodos.push(
-        {
-          title: "Learn JavaScript",
-          id: selectedProject.projectID + createID(),
-          project: selectedProject.projectName,
-          optionObject: {
-            description: "build javascript projects",
-            dueDate: "2024-04-15",
-            priority: "high",
-          },
-        }
-      );
-      dataStorage().postData(projects.getSavedProjects());
-      clearMain();
-      fillMain(selectedProject.projectID);
-    }
+    selectedProject.listOfTodos.push(
+      {
+        title: taskNameInputValue,
+        id: selectedProject.projectID + createID(),
+        project: selectedProject.projectName,
+        optionObject: {
+          description: taskDescriptionInputValue,
+          dueDate: taskDueDateInputValue,
+          priority: taskPriorityInputValue,
+        },
+      }
+    );
+    dataStorage().postData(projects.getSavedProjects());
+    clearMain();
+    fillMain(selectedProject.projectID);
   }
 
   const fillMain = projectClicked => {
@@ -179,12 +186,14 @@ function screenController() {
       checkbox.type = "checkbox";
       checkbox.name = "complete-task";
       todoTitleText.textContent = todo.getTitle();
-      todoDescriptionText.textContent = todo.getDescription();
-      todoPriorityText.textContent = todo.getPriority();
-      todoDueDateText.textContent = format(
-                                      new Date(todo.getDueDate()),
-                                      "EEEE',' dd MMMM"
-                                    );
+      if (todo.getDescription()) todoDescriptionText.textContent = todo.getDescription();
+      if (todo.getPriority()) todoPriorityText.textContent = todo.getPriority();
+      if (todo.getDueDate()) {
+        todoDueDateText.textContent = format(
+                                        new Date(todo.getDueDate()),
+                                        "EEEE',' dd MMMM"
+                                      );
+      }
 
       todoItem.classList.add("todo-item");
       editBtn.classList.add("todo-edit-btn");
@@ -279,6 +288,37 @@ function screenController() {
     projectModal.showModal();
   };
 
+  const populateSelectInputField = id => {
+    projects.getSavedProjects().forEach(project => {
+      const option = document.createElement("option");
+      option.textContent = project.projectName;
+      option.value = project.projectID;
+      if (project.projectID === id) {
+        option.selected = true;
+      }
+      taskProjectInput.appendChild(option);
+    });
+  };
+
+  const clearSelectInputField = () => {
+    taskProjectInput.replaceChildren();
+  }; 
+
+  const openTaskModal = event => {
+    if (event.target.classList.contains("add-todo-btn")) {
+      populateSelectInputField(event.target.dataset.id);
+      taskModal.showModal();
+    }
+  };
+
+  const addTaskHandler = () => {
+    if (taskNameInput.value && taskProjectInput.value) {
+      addTodoItem(taskNameInput.value, taskProjectInput.value, taskDescriptionInput.value, taskPriorityInput.value, taskDueDateInput.value)
+      clearSelectInputField();
+      // TODO: clear input fields
+    }
+  };
+
   const addProjectHandler = () => {
     if (projectNameInput.value && projectStateInput.value) {
       addProject(projectNameInput.value, projectStateInput.value, projectDescriptionInput.value, projectCategoryInput.value);
@@ -288,11 +328,18 @@ function screenController() {
   };
 
   const closeModal = event => {
-    event.preventDefault()
+    event.preventDefault();
     projectModal.close();
     // TODO: put back after testing
     // clearInputFields(projectNameInput, projectStateInput, projectDescriptionInput, projectCategoryInput);
   };
+
+  const closeTaskModal = event => {
+    event.preventDefault();
+    clearSelectInputField();
+    taskModal.close();
+    // TODO: clear input fields
+  }
 
   const clearInputFields = (projectNameInput, projectStateInput, projectDescriptionInput, projectCategoryInput) => {
     projectNameInput.value = "";
@@ -321,10 +368,12 @@ function screenController() {
 
 
   modalAddProjectBtn.addEventListener("click", addProjectHandler);
-  modalCloseBtn.addEventListener("click", closeModal)
+  modalCloseBtn.addEventListener("click", closeModal);
+  taskCloseModalBtn.addEventListener("click", closeTaskModal);
+  modalAddTaskBtn.addEventListener("click", addTaskHandler);
   main.addEventListener("click", onMainButtonPress);
   aside.addEventListener("click", asideBtnClickHandler);
-  main.addEventListener("click", addTodoItem);
+  main.addEventListener("click", openTaskModal);
   addProjectButton.addEventListener("click", openModal);
 
   siteLoad();
