@@ -185,6 +185,9 @@ function screenController() {
       editBtn.classList.add("todo-edit-btn");
       deleteBtn.classList.add("todo-delete-btn");
       btnContainer.classList.add("btn-container");
+      btnContainer.dataset.id = todo.getID();
+      editBtn.dataset.id = todo.getID();
+      deleteBtn.dataset.id = todo.getID();
 
       editBtn.appendChild(newEditImage);
       deleteBtn.appendChild(newDeleteImage);
@@ -226,6 +229,23 @@ function screenController() {
     }
   }
 
+  const deleteItem = event => {
+    if (event.target.classList.contains("todo-delete-btn") || event.target.parentElement.classList.contains("todo-delete-btn")) {
+      const [ selectedProject ] = projects.getSavedProjects()
+        .filter(element => element.projectID === dataStorage().getActiveTab());
+      const itemToDelete = selectedProject.listOfTodos
+        .find(item => item.id === event.target.parentElement.dataset.id);
+      const index = selectedProject.listOfTodos.indexOf(itemToDelete);
+      selectedProject.listOfTodos.splice(index, 1);
+      dataStorage().postData(projects.getSavedProjects());
+      clearMain();
+      fillMain(dataStorage().getActiveTab())
+    }
+    if (event.target.classList.contains("delete-project-btn") || event.target.parentElement.classList.contains("delete-project-btn")) {
+      console.log("Project Deleted");
+    }
+  };
+
   const siteLoad = () => {
     if (dataStorage().getDataLength() === 0) return;
     fillNavbarWithProjects();
@@ -245,6 +265,7 @@ function screenController() {
   };
 
 
+  main.addEventListener("click", deleteItem);
   aside.addEventListener("click", asideBtnClickHandler);
   main.addEventListener("click", addTodoItem);
   addProjectButton.addEventListener("click", addProject);
