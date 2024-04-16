@@ -13,21 +13,24 @@ function screenController() {
   const projectSectionDOM = document.querySelector(".project-section");
   const main = document.querySelector("main");
   const aside = document.querySelector("aside");
+  const modalAddProjectBtn = document.querySelector(".modal-btn-add-project");
+  const modalCloseBtn = document.querySelector(".modal-btn-close");
+  const projectModal = document.querySelector(".project-modal");
+  const projectNameInput = document.querySelector("#project-name");
+  const projectStateInput = document.querySelector("#project-state");
+  const projectDescriptionInput = document.querySelector("#project-description");
+  const projectCategoryInput = document.querySelector("#project-category");
 
 
-  const randomNumber = () => {
-    return Math.floor(Math.random() * 20);
-  };
-
-  const addProject = () => {
+  const addProject = (projectNameInputValue, projectStateInputValue, projectDescriptionInputValue, projectCategoryInputValue) => {
     const newProject = {
-      projectName: `The Odin Project${randomNumber()}`,
-      projectState: "in Progress",
+      projectName: projectNameInputValue,
+      projectState: projectStateInputValue,
       listOfTodos: [],
       projectID: createID(),
       projectOptions: {
-        projectDescription: "Learn Web Development", 
-        projectCategory: "Coding",
+        projectDescription: projectDescriptionInputValue, 
+        projectCategory: projectCategoryInputValue,
       },
     };
 
@@ -251,6 +254,8 @@ function screenController() {
     projects.getSavedProjects().splice(index, 1);
     dataStorage().postData(projects.getSavedProjects());
     clearMain();
+    dataStorage().postData("1");
+    fillMain(dataStorage().getActiveTab());
     updateNavbar();
   };
 
@@ -268,6 +273,32 @@ function screenController() {
       ) {
       deleteProject(event);
     }
+  };
+
+  const openModal = () => {
+    projectModal.showModal();
+  };
+
+  const addProjectHandler = () => {
+    if (projectNameInput.value && projectStateInput.value) {
+      addProject(projectNameInput.value, projectStateInput.value, projectDescriptionInput.value, projectCategoryInput.value);
+      // TODO: put back after testing
+      // clearInputFields(projectNameInput, projectStateInput, projectDescriptionInput, projectCategoryInput);
+    }
+  };
+
+  const closeModal = event => {
+    event.preventDefault()
+    projectModal.close();
+    // TODO: put back after testing
+    // clearInputFields(projectNameInput, projectStateInput, projectDescriptionInput, projectCategoryInput);
+  };
+
+  const clearInputFields = (projectNameInput, projectStateInput, projectDescriptionInput, projectCategoryInput) => {
+    projectNameInput.value = "";
+    projectStateInput.value = "";
+    projectDescriptionInput.value = "";
+    projectCategoryInput.value = "";
   };
 
   const siteLoad = () => {
@@ -289,11 +320,12 @@ function screenController() {
   };
 
 
-  // main.addEventListener("click", deleteItem);
+  modalAddProjectBtn.addEventListener("click", addProjectHandler);
+  modalCloseBtn.addEventListener("click", closeModal)
   main.addEventListener("click", onMainButtonPress);
   aside.addEventListener("click", asideBtnClickHandler);
   main.addEventListener("click", addTodoItem);
-  addProjectButton.addEventListener("click", addProject);
+  addProjectButton.addEventListener("click", openModal);
 
   siteLoad();
 }
