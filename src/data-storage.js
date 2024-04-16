@@ -32,7 +32,7 @@ function localStorageData() {
   const itemGetter = () => JSON.parse(localStorage.getItem("projects"));
   const activeTabGetter = () => JSON.parse(localStorage.getItem("activeTab"));
 
-  const getLength = () => localStorage.length;
+  const getLength = () => itemGetter() ? itemGetter().length : 0;
 
   return {
     itemSetter,
