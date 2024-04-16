@@ -1,4 +1,4 @@
-function todoItem({ title, projectID, project, optionObject }) {
+function todoItem({ title, id, project, optionObject }) {
   let {
     description,
     dueDate,
@@ -7,7 +7,6 @@ function todoItem({ title, projectID, project, optionObject }) {
 
   let statusDone = false;
 
-  const id = projectID + createID();
 
   const getTitle = () => title;
   const getDescription = () => description;
