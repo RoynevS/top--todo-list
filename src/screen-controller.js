@@ -132,7 +132,8 @@ function screenController() {
     descriptionPara.classList.add("description-text");
     projectHeading.classList.add("project-heading-main");
 
-    
+    editProjectBtn.dataset.id = selectedProject.getProjectID();
+    deleteProjectBtn.dataset.id = selectedProject.getProjectID();
     
     projectHeading.textContent = selectedProject.getProjectName();
     
@@ -242,7 +243,12 @@ function screenController() {
       fillMain(dataStorage().getActiveTab())
     }
     if (event.target.classList.contains("delete-project-btn") || event.target.parentElement.classList.contains("delete-project-btn")) {
-      console.log("Project Deleted");
+      const selectedProject = projects.getSavedProjects().find(project => project.projectID === event.target.parentElement.dataset.id)
+      const index = projects.getSavedProjects().indexOf(selectedProject);
+      projects.getSavedProjects().splice(index, 1);
+      dataStorage().postData(projects.getSavedProjects());
+      clearMain();
+      updateNavbar();
     }
   };
 
