@@ -174,6 +174,7 @@ function screenController() {
       newDeleteImage.src = deleteImage;
 
       checkbox.type = "checkbox";
+      checkbox.name = "complete-task";
       todoTitleText.textContent = todo.getTitle();
       todoDescriptionText.textContent = todo.getDescription();
       todoPriorityText.textContent = todo.getPriority();
@@ -186,6 +187,7 @@ function screenController() {
       editBtn.classList.add("todo-edit-btn");
       deleteBtn.classList.add("todo-delete-btn");
       btnContainer.classList.add("btn-container");
+      todoItem.dataset.id = todo.getID();
       btnContainer.dataset.id = todo.getID();
       editBtn.dataset.id = todo.getID();
       deleteBtn.dataset.id = todo.getID();
@@ -231,24 +233,40 @@ function screenController() {
   }
 
   const deleteItem = event => {
-    if (event.target.classList.contains("todo-delete-btn") || event.target.parentElement.classList.contains("todo-delete-btn")) {
-      const [ selectedProject ] = projects.getSavedProjects()
+    const [ selectedProject ] = projects.getSavedProjects()
         .filter(element => element.projectID === dataStorage().getActiveTab());
-      const itemToDelete = selectedProject.listOfTodos
-        .find(item => item.id === event.target.parentElement.dataset.id);
-      const index = selectedProject.listOfTodos.indexOf(itemToDelete);
-      selectedProject.listOfTodos.splice(index, 1);
-      dataStorage().postData(projects.getSavedProjects());
-      clearMain();
-      fillMain(dataStorage().getActiveTab())
-    }
-    if (event.target.classList.contains("delete-project-btn") || event.target.parentElement.classList.contains("delete-project-btn")) {
-      const selectedProject = projects.getSavedProjects().find(project => project.projectID === event.target.parentElement.dataset.id)
-      const index = projects.getSavedProjects().indexOf(selectedProject);
-      projects.getSavedProjects().splice(index, 1);
-      dataStorage().postData(projects.getSavedProjects());
-      clearMain();
-      updateNavbar();
+    const itemToDelete = selectedProject.listOfTodos
+      .find(item => item.id === event.target.parentElement.dataset.id);
+    const index = selectedProject.listOfTodos.indexOf(itemToDelete);
+    selectedProject.listOfTodos.splice(index, 1);
+    dataStorage().postData(projects.getSavedProjects());
+    clearMain();
+    fillMain(dataStorage().getActiveTab())
+  };
+
+
+  const deleteProject = event => {
+    const selectedProject = projects.getSavedProjects().find(project => project.projectID === event.target.parentElement.dataset.id)
+    const index = projects.getSavedProjects().indexOf(selectedProject);
+    projects.getSavedProjects().splice(index, 1);
+    dataStorage().postData(projects.getSavedProjects());
+    clearMain();
+    updateNavbar();
+  };
+
+
+  const onMainButtonPress = event => {
+    if (
+        event.target.classList.contains("todo-delete-btn") 
+        || event.target.parentElement.classList.contains("todo-delete-btn") 
+        || event.target.name === "complete-task"
+      ) {
+      deleteItem(event);
+    } else if (
+        event.target.classList.contains("delete-project-btn") 
+        || event.target.parentElement.classList.contains("delete-project-btn")
+      ) {
+      deleteProject(event);
     }
   };
 
@@ -271,7 +289,8 @@ function screenController() {
   };
 
 
-  main.addEventListener("click", deleteItem);
+  // main.addEventListener("click", deleteItem);
+  main.addEventListener("click", onMainButtonPress);
   aside.addEventListener("click", asideBtnClickHandler);
   main.addEventListener("click", addTodoItem);
   addProjectButton.addEventListener("click", addProject);
