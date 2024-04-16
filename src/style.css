@@ -190,8 +190,14 @@ button {
   width: 2rem;
 }
 
+.btn-container {
+  display: flex;
+  gap: 1rem;
+}
+
 .todo-edit-btn,
 .todo-delete-btn {
+  display: flex;
   border: none;
   background-color: var(--clr-neutral-100);
 }
@@ -203,5 +209,7 @@ button {
 
 .todo-edit-btn > img,
 .todo-delete-btn > img {
+  align-self: center;
+  justify-self: center;
   width: 1.2rem;
 }
