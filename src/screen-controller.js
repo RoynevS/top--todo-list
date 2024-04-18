@@ -281,10 +281,21 @@ function screenController() {
         || event.target.parentElement.classList.contains("delete-project-btn")
       ) {
       deleteProject(event);
+    } else if (
+      event.target.classList.contains("edit-project-btn") 
+      || event.target.parentElement.classList.contains("edit-project-btn")
+    ) {
+      editProjectHandler(event);
     }
   };
 
-  const openModal = () => {
+  const openModal = (btnText) => {
+    btnText = (typeof btnText === "string") ? btnText : "Add";
+    const actionBtnDiv = document.querySelector(".action-btn");
+    const actionBtn = document.createElement("button");
+    actionBtn.textContent = btnText;
+    if (btnText === "Add") actionBtn.classList.add("modal-btn-add-project");
+    actionBtnDiv.replaceChildren(actionBtn);
     projectModal.showModal();
   };
 
@@ -319,8 +330,8 @@ function screenController() {
     }
   };
 
-  const addProjectHandler = () => {
-    if (projectNameInput.value && projectStateInput.value) {
+  const addProjectHandler = event => {
+    if (projectNameInput.value && projectStateInput.value && event.target.classList.contains("modal-btn-add-project")) {
       addProject(projectNameInput.value, projectStateInput.value, projectDescriptionInput.value, projectCategoryInput.value);
       // TODO: put back after testing
       // clearInputFields(projectNameInput, projectStateInput, projectDescriptionInput, projectCategoryInput);
@@ -348,6 +359,10 @@ function screenController() {
     projectCategoryInput.value = "";
   };
 
+  const editProjectHandler = event => {
+    openModal("Edit");
+  };
+
   const siteLoad = () => {
     if (dataStorage().getDataLength() === 0) return;
     fillNavbarWithProjects();
@@ -367,7 +382,8 @@ function screenController() {
   };
 
 
-  modalAddProjectBtn.addEventListener("click", addProjectHandler);
+  projectModal.addEventListener("click", addProjectHandler);
+  // modalAddProjectBtn.addEventListener("click", addProjectHandler);
   modalCloseBtn.addEventListener("click", closeModal);
   taskCloseModalBtn.addEventListener("click", closeTaskModal);
   modalAddTaskBtn.addEventListener("click", addTaskHandler);
