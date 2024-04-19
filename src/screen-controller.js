@@ -1,7 +1,7 @@
 import { projectList } from "./project-list";
 import { createID } from "./project";
 import { dataStorage } from "./data-storage";
-import { format } from "date-fns";
+import { format, formatDistanceToNowStrict } from "date-fns";
 import editImage from "./images/square-edit-outline.png";
 import deleteImage from "./images/delete.png";
 
@@ -114,8 +114,10 @@ function screenController() {
         loadTodaySite(contentDiv);
         return;
       case "2":
+        loadUpcomingSite(contentDiv);
         return;
       case "3":
+        loadAnytimeSite(contentDiv);
         return;
       case undefined:
         return;
@@ -463,6 +465,164 @@ function screenController() {
     contentDiv.appendChild(mainContent);
   };
 
+  const loadAnytimeSite = contentDiv => {
+    const allTasks = [];
+    const listOfProjects = projects.createListOfProjects();
+    listOfProjects.forEach(project => allTasks.push(...project.getListOfTodos()));
+    const tasksAnytime = allTasks.filter(task => task.getDueDate() === "");
+
+    const mainContent = document.createElement("div")
+    const todoList = document.createElement("ul");
+
+    tasksAnytime.forEach(todo => {
+      const todoItem = document.createElement("li");
+      const todoTitleText = document.createElement("h3");
+      const todoDescriptionText = document.createElement("p");
+      const todoPriorityText = document.createElement("p");
+      const todoDueDateText = document.createElement("p");
+      const todoProject = document.createElement("p");
+      const checkbox = document.createElement("input");
+      const editBtn = document.createElement("button");
+      const deleteBtn = document.createElement("button");
+      const btnContainer = document.createElement("div");
+
+      const newEditImage = new Image();
+      newEditImage.src = editImage;
+
+      const newDeleteImage = new Image();
+      newDeleteImage.src = deleteImage;
+
+      checkbox.type = "checkbox";
+      checkbox.name = "complete-task";
+      todoTitleText.textContent = todo.getTitle();
+      todoProject.textContent = todo.getProject();
+      if (todo.getDescription()) todoDescriptionText.textContent = todo.getDescription();
+      if (todo.getPriority()) todoPriorityText.textContent = todo.getPriority();
+      if (todo.getDueDate()) {
+        todoDueDateText.textContent = format(
+                                        new Date(todo.getDueDate()),
+                                        "EEEE',' dd MMMM"
+                                      );
+      }
+
+      todoItem.classList.add("todo-item");
+      editBtn.classList.add("todo-edit-btn");
+      deleteBtn.classList.add("todo-delete-btn");
+      btnContainer.classList.add("btn-container");
+      todoItem.dataset.id = todo.getID();
+      btnContainer.dataset.id = todo.getID();
+      editBtn.dataset.id = todo.getID();
+      deleteBtn.dataset.id = todo.getID();
+
+      editBtn.appendChild(newEditImage);
+      deleteBtn.appendChild(newDeleteImage);
+      btnContainer.appendChild(editBtn);
+      btnContainer.appendChild(deleteBtn);
+      todoItem.appendChild(checkbox);
+      todoItem.appendChild(todoTitleText);
+      todoItem.appendChild(todoDescriptionText);
+      todoItem.appendChild(todoPriorityText);
+      todoItem.appendChild(todoProject);
+      todoItem.appendChild(todoDueDateText);
+      todoItem.appendChild(btnContainer);
+      todoList.appendChild(todoItem);
+    });
+
+    mainContent.classList.add("main-content-section");
+
+    mainContent.appendChild(todoList);
+    contentDiv.appendChild(mainContent);
+  };
+
+
+  const loadUpcomingSite = contentDiv => {
+    const allTasks = [];
+    const listOfProjects = projects.createListOfProjects();
+    listOfProjects.forEach(project => allTasks.push(...project.getListOfTodos()));
+    const tasksUpcoming = allTasks.filter(task => {
+      if (!task.getDueDate()) return false;
+      const distanceString = formatDistanceToNowStrict(new Date(task.getDueDate()), {
+        unit: "day",
+      });
+      const distanceArray = distanceString.split(" ");
+      const distance = Number(distanceArray[0]);
+      console.log(task.getTitle(), distanceString);
+      if (distance <= 7) {
+        return true;
+      // } else if (distanceArray[1] === "hours" || distanceArray[1] === "minutes" || distanceArray[1] === "seconds") {
+      //   return true;
+      } else {
+        return false;
+      }
+    });
+
+    const mainContent = document.createElement("div")
+    const todoList = document.createElement("ul");
+
+    tasksUpcoming.forEach(todo => {
+      const todoItem = document.createElement("li");
+      const todoTitleText = document.createElement("h3");
+      const todoDescriptionText = document.createElement("p");
+      const todoPriorityText = document.createElement("p");
+      const todoDueDateText = document.createElement("p");
+      const todoProject = document.createElement("p");
+      const checkbox = document.createElement("input");
+      const editBtn = document.createElement("button");
+      const deleteBtn = document.createElement("button");
+      const btnContainer = document.createElement("div");
+
+      const newEditImage = new Image();
+      newEditImage.src = editImage;
+
+      const newDeleteImage = new Image();
+      newDeleteImage.src = deleteImage;
+
+      checkbox.type = "checkbox";
+      checkbox.name = "complete-task";
+      todoTitleText.textContent = todo.getTitle();
+      todoProject.textContent = todo.getProject();
+      if (todo.getDescription()) todoDescriptionText.textContent = todo.getDescription();
+      if (todo.getPriority()) todoPriorityText.textContent = todo.getPriority();
+      if (todo.getDueDate()) {
+        todoDueDateText.textContent = format(
+                                        new Date(todo.getDueDate()),
+                                        "EEEE',' dd MMMM"
+                                      );
+      }
+
+      todoItem.classList.add("todo-item");
+      editBtn.classList.add("todo-edit-btn");
+      deleteBtn.classList.add("todo-delete-btn");
+      btnContainer.classList.add("btn-container");
+      todoItem.dataset.id = todo.getID();
+      btnContainer.dataset.id = todo.getID();
+      editBtn.dataset.id = todo.getID();
+      deleteBtn.dataset.id = todo.getID();
+
+      editBtn.appendChild(newEditImage);
+      deleteBtn.appendChild(newDeleteImage);
+      btnContainer.appendChild(editBtn);
+      btnContainer.appendChild(deleteBtn);
+      todoItem.appendChild(checkbox);
+      todoItem.appendChild(todoTitleText);
+      todoItem.appendChild(todoDescriptionText);
+      todoItem.appendChild(todoPriorityText);
+      todoItem.appendChild(todoProject);
+      todoItem.appendChild(todoDueDateText);
+      todoItem.appendChild(btnContainer);
+      todoList.appendChild(todoItem);
+    });
+
+    mainContent.classList.add("main-content-section");
+
+    mainContent.appendChild(todoList);
+    contentDiv.appendChild(mainContent);
+  };
+
+  // const sortDueDates = (firstElement, secondElement) => {
+  //   if (firstElement.getDueDate() - secondElement.getDueDate())
+  // }
+
   const siteLoad = () => {
     if (dataStorage().getDataLength() === 0) return;
     fillNavbarWithProjects();
@@ -472,8 +632,10 @@ function screenController() {
         fillMain("1");
         return;
       case "2":
+        fillMain("2");
         return;
       case "3":
+        fillMain("3");
         return;
       case undefined:
         return;
