@@ -219,7 +219,7 @@ function screenController() {
 
     mainContent.classList.add("main-content-section");
     addTodoBtn.classList.add("add-todo-btn");
-    addTodoBtn.textContent = "+ Todo";
+    addTodoBtn.textContent = "+ Task";
     addTodoBtn.dataset.id = selectedProject.getProjectID();
 
     mainContent.appendChild(todoList);
@@ -285,7 +285,7 @@ function screenController() {
       event.target.classList.contains("edit-project-btn") 
       || event.target.parentElement.classList.contains("edit-project-btn")
     ) {
-      editProjectHandler(event);
+      showEditModal(event);
     }
   };
 
@@ -294,7 +294,9 @@ function screenController() {
     const actionBtnDiv = document.querySelector(".action-btn");
     const actionBtn = document.createElement("button");
     actionBtn.textContent = btnText;
-    if (btnText === "Add") actionBtn.classList.add("modal-btn-add-project");
+    (btnText === "Add") 
+            ? actionBtn.classList.add("modal-btn-add-project") 
+            : actionBtn.classList.add("modal-btn-edit-project");
     actionBtnDiv.replaceChildren(actionBtn);
     projectModal.showModal();
   };
@@ -330,8 +332,8 @@ function screenController() {
     }
   };
 
-  const addProjectHandler = event => {
-    if (projectNameInput.value && projectStateInput.value && event.target.classList.contains("modal-btn-add-project")) {
+  const addProjectHandler = () => {
+    if (projectNameInput.value && projectStateInput.value) {
       addProject(projectNameInput.value, projectStateInput.value, projectDescriptionInput.value, projectCategoryInput.value);
       // TODO: put back after testing
       // clearInputFields(projectNameInput, projectStateInput, projectDescriptionInput, projectCategoryInput);
@@ -359,8 +361,33 @@ function screenController() {
     projectCategoryInput.value = "";
   };
 
-  const editProjectHandler = event => {
+  const showEditModal = () => {
+    const selectedProject = projects.getSavedProjects().find(project => project.projectID === dataStorage().getActiveTab());
+    projectNameInput.value = selectedProject.projectName;
+    projectStateInput.value = selectedProject.projectState;
+    projectDescriptionInput.value = selectedProject.projectOptions.projectDescription;
+    projectCategoryInput.value = selectedProject.projectOptions.projectCategory;
     openModal("Edit");
+  };
+
+  const projectModalClickHandler = event => {
+    if (event.target.classList.contains("modal-btn-add-project")) {
+      addProjectHandler();
+    } else if (event.target.classList.contains("modal-btn-edit-project")) {
+      editProjectHandler();
+    }
+  };
+
+  const editProjectHandler = () => {
+    const selectedProject = projects.getSavedProjects().find(project => project.projectID === dataStorage().getActiveTab());
+    selectedProject.projectName = projectNameInput.value;
+    selectedProject.projectState = projectStateInput.value;
+    selectedProject.projectOptions.projectDescription = projectDescriptionInput.value;
+    selectedProject.projectOptions.projectCategory = projectCategoryInput.value;
+    dataStorage().postData(projects.getSavedProjects());
+    clearMain();
+    fillMain(dataStorage().getActiveTab());
+    updateNavbar();
   };
 
   const siteLoad = () => {
@@ -382,8 +409,7 @@ function screenController() {
   };
 
 
-  projectModal.addEventListener("click", addProjectHandler);
-  // modalAddProjectBtn.addEventListener("click", addProjectHandler);
+  projectModal.addEventListener("click", projectModalClickHandler);
   modalCloseBtn.addEventListener("click", closeModal);
   taskCloseModalBtn.addEventListener("click", closeTaskModal);
   modalAddTaskBtn.addEventListener("click", addTaskHandler);
