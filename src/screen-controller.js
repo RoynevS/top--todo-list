@@ -45,6 +45,9 @@ function screenController() {
     projects.saveNewProjectData(newProject);
 
     updateNavbar();
+    dataStorage().postData(newProject.projectID);
+    clearMain();
+    fillMain(newProject.projectID);
   };
 
   const updateNavbar = () => {
@@ -108,6 +111,7 @@ function screenController() {
     main.appendChild(contentDiv);
     switch (projectClicked) {
       case "1":
+        loadTodaySite(contentDiv);
         return;
       case "2":
         return;
@@ -246,7 +250,7 @@ function screenController() {
 
   const deleteItem = event => {
     const [ selectedProject ] = projects.getSavedProjects()
-        .filter(element => element.projectID === dataStorage().getActiveTab());
+        .filter(element => element.projectID === event.target.parentElement.dataset.id.slice(0, 4));
     const itemToDelete = selectedProject.listOfTodos
       .find(item => item.id === event.target.parentElement.dataset.id);
     const index = selectedProject.listOfTodos.indexOf(itemToDelete);
@@ -390,12 +394,82 @@ function screenController() {
     updateNavbar();
   };
 
+  const loadTodaySite = contentDiv => {
+    const allTasks = [];
+    const listOfProjects = projects.createListOfProjects();
+    listOfProjects.forEach(project => allTasks.push(...project.getListOfTodos()));
+    const tasksToday = allTasks.filter(task => task.getDueDate() === format(new Date(), 'yyyy-MM-dd'));
+
+    const mainContent = document.createElement("div")
+    const todoList = document.createElement("ul");
+
+    tasksToday.forEach(todo => {
+      const todoItem = document.createElement("li");
+      const todoTitleText = document.createElement("h3");
+      const todoDescriptionText = document.createElement("p");
+      const todoPriorityText = document.createElement("p");
+      const todoDueDateText = document.createElement("p");
+      const todoProject = document.createElement("p");
+      const checkbox = document.createElement("input");
+      const editBtn = document.createElement("button");
+      const deleteBtn = document.createElement("button");
+      const btnContainer = document.createElement("div");
+
+      const newEditImage = new Image();
+      newEditImage.src = editImage;
+
+      const newDeleteImage = new Image();
+      newDeleteImage.src = deleteImage;
+
+      checkbox.type = "checkbox";
+      checkbox.name = "complete-task";
+      todoTitleText.textContent = todo.getTitle();
+      todoProject.textContent = todo.getProject();
+      if (todo.getDescription()) todoDescriptionText.textContent = todo.getDescription();
+      if (todo.getPriority()) todoPriorityText.textContent = todo.getPriority();
+      if (todo.getDueDate()) {
+        todoDueDateText.textContent = format(
+                                        new Date(todo.getDueDate()),
+                                        "EEEE',' dd MMMM"
+                                      );
+      }
+
+      todoItem.classList.add("todo-item");
+      editBtn.classList.add("todo-edit-btn");
+      deleteBtn.classList.add("todo-delete-btn");
+      btnContainer.classList.add("btn-container");
+      todoItem.dataset.id = todo.getID();
+      btnContainer.dataset.id = todo.getID();
+      editBtn.dataset.id = todo.getID();
+      deleteBtn.dataset.id = todo.getID();
+
+      editBtn.appendChild(newEditImage);
+      deleteBtn.appendChild(newDeleteImage);
+      btnContainer.appendChild(editBtn);
+      btnContainer.appendChild(deleteBtn);
+      todoItem.appendChild(checkbox);
+      todoItem.appendChild(todoTitleText);
+      todoItem.appendChild(todoDescriptionText);
+      todoItem.appendChild(todoPriorityText);
+      todoItem.appendChild(todoProject);
+      todoItem.appendChild(todoDueDateText);
+      todoItem.appendChild(btnContainer);
+      todoList.appendChild(todoItem);
+    });
+
+    mainContent.classList.add("main-content-section");
+
+    mainContent.appendChild(todoList);
+    contentDiv.appendChild(mainContent);
+  };
+
   const siteLoad = () => {
     if (dataStorage().getDataLength() === 0) return;
     fillNavbarWithProjects();
 
     switch (dataStorage().getActiveTab()) {
       case "1":
+        fillMain("1");
         return;
       case "2":
         return;
